@@ -1,3 +1,5 @@
+Replace the current `README.md` with this version:
+
 # Python TextController
 
 A reusable Pygame text-effects controller inspired by old-school arcade games, C64 demo-scene effects, scrolling messages, title screens, and attract modes.
@@ -6,9 +8,8 @@ This is the Python/Pygame counterpart to:
 
 * [Unity TextController](https://github.com/SaundersEddie/Unity-TextController)
 * [Godot TextController](https://github.com/SaundersEddie/Godot-TextController)
-* [C64 TextController](https://github.com/SaundersEddie/C64-TextController)
 
-The controller renders each character separately, allowing movement, character animation, color effects, and opacity fades to operate independently and be freely combined.
+Each character is rendered separately, allowing movement, character animation, color effects, and opacity fades to operate independently and be combined freely.
 
 ## Current Features
 
@@ -47,10 +48,10 @@ For example, text can scroll horizontally while each character follows a sine wa
 
 ## Requirements
 
-* Python 3.13 or newer
+* Python 3.10 or newer
 * Pygame 2.6.1
 
-The project was initially developed using:
+The project was developed and tested using:
 
 ```text
 Python 3.13.15
@@ -85,7 +86,7 @@ Activate it on macOS or Linux:
 source .venv/bin/activate
 ```
 
-Install the requirements:
+Install the required packages:
 
 ```bash
 python -m pip install -r requirements.txt
@@ -109,6 +110,97 @@ The demo runs at:
 Press `Escape` or close the window to exit.
 
 The sequence runs automatically and demonstrates scrolling, bouncing, sine-wave movement, color cycling, opacity fades, music, and the parallax starfield.
+
+## Building a Windows Executable
+
+The project can be packaged as a Windows executable using PyInstaller.
+
+The executable must be built on Windows. PyInstaller packages applications for the operating system on which it is running; it is not a cross-compiler.
+
+### Install PyInstaller
+
+From the activated project virtual environment, run:
+
+```powershell
+python -m pip install pyinstaller
+```
+
+### Create a Testable Folder Build
+
+Build the application as a folder first. This version is easier to inspect and troubleshoot:
+
+```powershell
+python -m PyInstaller --noconfirm --clean --onedir --name Python-TextController --add-data "text_controller\Music\SidewinderRainbow.mp3:text_controller\Music" main.py
+```
+
+The build creates:
+
+```text
+build/
+dist/
+Python-TextController.spec
+```
+
+Run the folder build with:
+
+```powershell
+.\dist\Python-TextController\Python-TextController.exe
+```
+
+Confirm that:
+
+* The window opens without Python being started manually
+* The automatic demo runs
+* The starfield appears
+* Text effects work
+* Music plays
+* The program closes with `Escape`
+
+The entire `dist\Python-TextController` folder is required when distributing this version.
+
+### Create a Single-File Executable
+
+After the folder build works, create the final single-file version:
+
+```powershell
+python -m PyInstaller --noconfirm --clean --onefile --windowed --name Python-TextController --add-data "text_controller\Music\SidewinderRainbow.mp3:text_controller\Music" main.py
+```
+
+The finished executable will be:
+
+```text
+dist\Python-TextController.exe
+```
+
+The options used are:
+
+```text
+--onefile       Build one executable
+--windowed      Do not open a separate console window
+--name          Set the executable name
+--add-data      Include the MP3 in the packaged application
+--clean         Clear cached build files
+--noconfirm     Replace an existing build without prompting
+```
+
+The music is placed inside the executable using the same relative directory structure expected by the application:
+
+```text
+text_controller/Music/SidewinderRainbow.mp3
+```
+
+### Antivirus Notices
+
+Unsigned PyInstaller executables can occasionally trigger additional antivirus inspection or false-positive warnings, particularly when using `--onefile`.
+
+If this happens:
+
+* Confirm the executable was built from your own source
+* Test the `--onedir` build
+* Submit a false-positive report to the antivirus provider if necessary
+* Consider code-signing public release builds
+
+Do not disable antivirus protection simply to distribute the application.
 
 ## Project Structure
 
@@ -229,8 +321,6 @@ Each character is rendered as an individual Pygame surface.
 
 Whole-text movement is applied to the combined text position, while character effects apply an additional offset to each character during drawing.
 
-Conceptually:
-
 ```text
 TextController
 └── Character surfaces
@@ -259,7 +349,7 @@ The controller waits until the entire string has left the visible area before re
 This prevents text from:
 
 * Disappearing before the final character leaves the screen
-* Respawning while part of the string is still visible
+* Respawning while part of the string remains visible
 * Wrapping relative to the wrong coordinate system
 
 ## Fonts
@@ -272,11 +362,11 @@ A custom `.ttf` or `.otf` font can be loaded with:
 font = pygame.font.Font("path/to/font.ttf", 72)
 ```
 
-A retro font may be added later, but no custom font is required to use the controller.
+A custom retro font may be added later, but one is not required to use the controller.
 
 ## Music
 
-The demo currently expects:
+The demo expects:
 
 ```text
 text_controller/Music/SidewinderRainbow.mp3
@@ -304,7 +394,7 @@ The project is intended to remain:
 * Free from hand-built character objects
 * Suitable for retro games, title screens, messages, and demo sequences
 
-The primary component remains `TextController`. The starfield, music, and demo controllers are optional supporting components.
+The primary component is `TextController`. The starfield, music, and demo controllers are optional supporting components.
 
 ## Future Possibilities
 
